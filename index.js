@@ -76,7 +76,7 @@ class Bot extends EventEmitter {
          if (this.channels) {
              return Vow.fulfill({ channels: this.channels });
          }
-         return this._api('conversations.list');
+         return this._api('conversations.list', {limit: 1000});
       }
 
     /**
