@@ -95,16 +95,14 @@ class Bot extends EventEmitter {
   }
 
   getChannelsPaginated(channels = [], cursor = undefined) {
-    const pageLimit = 1000
+    const pageLimit = 500
     return this._api('conversations.list', {
-      types: 'public_channel,private_channel',
-      exclude_archived: true,
       cursor: cursor,
       limit: pageLimit,
     }).then((data) => {
       channels.push(...data.channels)
 
-      if (data.channels.length === pageLimit) {
+      if (data.response_metadata.next_cursor) {
         return this.getChannelsPaginated(channels, data.response_metadata.next_cursor)
       } else {
         return Vow.fulfill({ channels: channels })
@@ -157,7 +155,6 @@ class Bot extends EventEmitter {
    */
   getChannel(name) {
     return this.getChannels().then(function (data) {
-      console.log('data.channels.length: ', data.channels.length)
       var res = _.find(data.channels, { name: name })
 
       console.assert(res, 'channel not found')
