@@ -99,6 +99,7 @@ class Bot extends EventEmitter {
     return this._api('conversations.list', {
       cursor: cursor,
       limit: pageLimit,
+      types: "public_channel,private_channel",
     }).then((data) => {
       channels.push(...data.channels)
 
